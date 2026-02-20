@@ -4,6 +4,38 @@
 #include <vector>
 #include <string>
 
+struct Vec2
+{
+    float x = 0.0f;
+    float y = 0.0f;
+};
+
+Vec2 offset;
+
+void keyCallback(GLFWwindow* window, int key, int scanCode, int action, int mods)
+{
+    if (action != GLFW_RELEASE)
+    {
+        switch (key)
+        {
+        case GLFW_KEY_UP:
+            offset.y += 0.01f;
+            break;
+        case GLFW_KEY_DOWN:
+            offset.y -= 0.01f;
+            break;
+        case GLFW_KEY_RIGHT:
+            offset.x += 0.01f;
+            break;
+        case GLFW_KEY_LEFT:
+            offset.x -= 0.01f;
+            break;
+        default:
+            break;
+        }
+    }
+}
+
 int main()
 {
     if (!glfwInit())
@@ -24,6 +56,8 @@ int main()
         return -1;
     }
 
+    glfwSetKeyCallback(window, keyCallback);
+
     glfwMakeContextCurrent(window);
 
     // glad: load all OpenGL function pointers
@@ -40,12 +74,14 @@ int main()
         layout (location = 0) in vec3 position;
         layout (location = 1) in vec3 color;
 
+        uniform vec2 uOffset;
+
         out vec3 vColor;
 
         void main()
         {
             vColor = color;
-            gl_Position = vec4(position.x, position.y, position.z, 1.0);
+            gl_Position = vec4(position.x + uOffset.x, position.y + uOffset.y, position.z, 1.0);
         }
     )";
 
@@ -68,10 +104,11 @@ int main()
         out vec4 FragColor;
 
         in vec3 vColor;
+        uniform vec4 uColor;
 
         void main()
         {
-            FragColor = vec4(vColor, 1.0);
+            FragColor = vec4(vColor, 1.0) * uColor;
         }
     )";
 
@@ -106,9 +143,9 @@ int main()
 
     std::vector<float> vertices =
     {
-        0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-        0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
         0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f
     };
 
@@ -145,12 +182,17 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    GLint uColorLoc = glGetUniformLocation(shaderProgram, "uColor");
+    GLint uOffsetLoc = glGetUniformLocation(shaderProgram, "uOffset");
+
     while (!glfwWindowShouldClose(window))
     {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
+        glUniform4f(uColorLoc, 0.0f, 1.0f, 0.0f, 1.0f);
+        glUniform2f(uOffsetLoc, offset.x, offset.y);
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
