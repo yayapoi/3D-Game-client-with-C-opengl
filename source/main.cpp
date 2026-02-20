@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <vector>
 
 int main()
 {
@@ -32,6 +33,13 @@ int main()
         glfwTerminate();
         return -1;
     }
+
+    std::vector<float> vertices =
+    {
+        0.0f, 0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+    };
 
     while (!glfwWindowShouldClose(window))
     {
