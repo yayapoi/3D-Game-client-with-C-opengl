@@ -57,6 +57,26 @@ namespace eng
         return std::make_shared<ShaderProgram>(shaderProgramID);
     }
 
+    GLuint GraphicsAPI::CreateVertexBuffer(const std::vector<float>& vertices)
+    {
+        GLuint VBO = 0;
+        glGenBuffers(1, &VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        return VBO;
+    }
+
+    GLuint GraphicsAPI::CreateIndexBuffer(const std::vector<uint32_t>& indices)
+    {
+        GLuint EBO = 0;
+        glGenBuffers(1, &EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        return EBO;
+    }
+
     void GraphicsAPI::BindShaderProgram(ShaderProgram* shaderProgram)
     {
         if (shaderProgram)
