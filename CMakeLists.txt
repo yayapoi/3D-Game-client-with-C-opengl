@@ -4,22 +4,13 @@ project (GameDevelopmentProject)
 
 set(PROJECT_SOURCE_FILES
   source/main.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glad/src/glad.c
 )
 # Add the application
 include_directories(source)
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_FILES})
 
-# Add GLFW library
-add_subdirectory(thirdparty/glfw-3.4 "${CMAKE_CURRENT_BINARY_DIR}/glfw_build")
-include_directories(thirdparty/glfw-3.4/include)
-
-# 添加glad头文件路径
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glad/include
-)
-
-# Link all thirdparty libraries
+# Add engine library
+add_subdirectory(engine "${CMAKE_CURRENT_BINARY_DIR}/engine_build")
 target_link_libraries(${PROJECT_NAME} 
-    glfw 
+    Engine
 )
