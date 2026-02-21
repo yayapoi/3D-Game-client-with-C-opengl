@@ -8,6 +8,7 @@ namespace eng
 {
     class ShaderProgram;
     class Material;
+    class Mesh;
 
     class GraphicsAPI
     {
@@ -19,5 +20,7 @@ namespace eng
 
         void BindShaderProgram(ShaderProgram* shaderProgram);
         void BindMaterial(Material* material);
+        void BindMesh(Mesh* mesh);
+        void DrawMesh(Mesh* mesh);
     };
 }
