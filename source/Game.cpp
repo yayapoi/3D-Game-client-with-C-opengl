@@ -52,8 +52,8 @@ bool Game::Init()
 
     // Postion
     vertexLayout.elements.push_back({
-        0,
-        3,
+        0, 
+        3, 
         GL_FLOAT,
         0
         });
@@ -64,7 +64,7 @@ bool Game::Init()
         GL_FLOAT,
         sizeof(float) * 3
         });
-    vertexLayout.stride = sizeof(float) * 6;
+    vertexLayout.stride = sizeof(float) * 6; 
 
     m_mesh = std::make_unique<eng::Mesh>(vertexLayout, vertices, indices);
 
@@ -79,6 +79,13 @@ void Game::Update(float deltaTime)
     {
         std::cout << "[A] button is pressed" << std::endl;
     }
+
+    eng::RenderCommand command;
+    command.material = &m_material;
+    command.mesh = m_mesh.get();
+
+    auto& renderQueue = eng::Engine::GetInstance().GetRenderQueue();
+    renderQueue.Submit(command);
 }
 
 void Game::Destroy()
