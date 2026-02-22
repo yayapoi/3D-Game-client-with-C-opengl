@@ -1,5 +1,6 @@
 #include "scene/components/CameraComponent.h"
 #include "scene/GameObject.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace eng
 {
@@ -12,8 +13,8 @@ namespace eng
         return glm::inverse(m_owner->GetWorldTransform());
     }
 
-    glm::mat4 CameraComponent::GetProjectionMatrix() const
+    glm::mat4 CameraComponent::GetProjectionMatrix(float aspect) const
     {
-        return glm::mat4(1.0f);
+        return glm::perspective(glm::radians(m_fov), aspect, m_nearPlane, m_farPlane);
     }
 }
