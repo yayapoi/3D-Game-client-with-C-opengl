@@ -59,7 +59,7 @@ namespace eng
         {
             std::cout << "Failed to initialize GLAD" << std::endl;
             glfwTerminate();
-            return -1;
+            return false;
         }
 
         return m_application->Init();

@@ -70,11 +70,11 @@ namespace eng
     {
         if (m_indexCount > 0)
         {
-            glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indexCount), GL_UNSIGNED_INT, 0);
         }
         else
         {
-            glDrawArrays(GL_TRIANGLES, 0, m_vertexCout);
+            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(m_vertexCout));
         }
     }
 }
