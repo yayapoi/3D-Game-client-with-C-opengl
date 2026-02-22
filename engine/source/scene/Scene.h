@@ -23,7 +23,7 @@ namespace eng
             return obj;
         }
 
-        void SetParent(GameObject* obj, GameObject* parent);
+        bool SetParent(GameObject* obj, GameObject* parent);
 
     private:
         std::vector<std::unique_ptr<GameObject>> m_objects;
