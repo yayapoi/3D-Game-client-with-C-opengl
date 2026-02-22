@@ -27,6 +27,8 @@ set(PROJECT_SOURCE_FILES
 	source/scene/Component.cpp
 	source/scene/components/MeshComponent.h
 	source/scene/components/MeshComponent.cpp
+	source/scene/components/CameraComponent.h
+	source/scene/components/CameraComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glad/src/glad.c
 )
 
