@@ -11,7 +11,7 @@ set(PROJECT_SOURCE_FILES
 )
 
 include_directories(engine/thirdparty/glew/include)
-include_directories(engine/thirdparty/glm-1.0.1)
+include_directories(engine/thirdparty/glm)
 
 # Add the application
 include_directories(source)

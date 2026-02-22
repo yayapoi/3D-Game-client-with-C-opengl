@@ -53,8 +53,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 # Add GLM library
-add_subdirectory(thirdparty/glm-1.0.1/glm)
-include_directories(thirdparty/glm-1.0.1)
+add_subdirectory(thirdparty/glm/glm)
+include_directories(thirdparty/glm)
 
 # Link all thirdparty libraries
 target_link_libraries(${PROJECT_NAME} 
