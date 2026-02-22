@@ -5,6 +5,11 @@ namespace eng
 {
     void GameObject::Update(float deltaTime)
     {
+        for (auto& component : m_components)
+        {
+            component->Update(deltaTime);
+        }
+
         for (auto it = m_children.begin(); it != m_children.end();)
         {
             if ((*it)->IsAlive())
@@ -42,6 +47,12 @@ namespace eng
     void GameObject::MarkForDestroy()
     {
         m_isAlive = false;
+    }
+
+    void GameObject::AddComponent(Component* component)
+    {
+        m_components.emplace_back(component);
+        component->m_owner = this;
     }
 
     const glm::vec3& GameObject::GetPosition() const
