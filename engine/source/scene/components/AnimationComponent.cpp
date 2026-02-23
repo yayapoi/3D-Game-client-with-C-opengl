@@ -89,6 +89,11 @@ namespace eng
         }
     }
 
+    bool AnimationComponent::IsPlaying() const
+    {
+        return m_isPlaying;
+    }
+
     void AnimationComponent::BuildBindings()
     {
         m_bindings.clear();
