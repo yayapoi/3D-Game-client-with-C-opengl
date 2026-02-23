@@ -3,24 +3,10 @@
 
 #include <iostream>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
-
 bool Game::Init()
 {
     auto& fs = eng::Engine::GetInstance().GetFileSystem();
-    auto path = fs.GetAssetsFolder() / "brick.png";
-
-    int width, height, channels;
-    unsigned char* data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
-
-    std::shared_ptr<eng::Texture> texture;
-    if (data)
-    {
-        texture = std::make_shared<eng::Texture>(width, height, channels, data);
-        stbi_image_free(data);
-    }
+    auto texture = eng::Texture::Load("brick.png");
 
     m_scene = new eng::Scene();
 
@@ -33,43 +19,8 @@ bool Game::Init()
 
     m_scene->CreateObject<TestObject>("TestObject");
 
-
-    std::string vertexShaderSource = R"(
-        #version 330 core
-        layout (location = 0) in vec3 position;
-        layout (location = 1) in vec3 color;
-        layout (location = 2) in vec2 uv;
-
-        out vec3 vColor;
-        out vec2 vUV;
-
-        uniform mat4 uModel;
-        uniform mat4 uView;
-        uniform mat4 uProjection;
-
-        void main()
-        {
-            vColor = color;
-            vUV = uv;
-            gl_Position = uProjection * uView * uModel * vec4(position, 1.0);
-        }
-    )";
-
-    std::string fragmentShaderSource = R"(
-        #version 330 core
-        out vec4 FragColor;
-
-        in vec3 vColor;
-        in vec2 vUV;
-
-        uniform sampler2D brickTexture;
-
-        void main()
-        {
-            vec4 texColor = texture(brickTexture, vUV);
-            FragColor = texColor * vec4(vColor, 1.0);
-        }
-    )";
+    std::string vertexShaderSource = fs.LoadAssetFileText("shaders/vertex.glsl");
+    std::string fragmentShaderSource = fs.LoadAssetFileText("shaders/fragment.glsl");
 
     auto& graphicsAPI = eng::Engine::GetInstance().GetGraphicsAPI();
     auto shaderProgram = graphicsAPI.CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
