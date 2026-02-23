@@ -42,8 +42,11 @@ set(PROJECT_SOURCE_FILES
 	source/scene/components/CameraComponent.cpp
 	source/scene/components/PlayerControllerComponent.h
 	source/scene/components/PlayerControllerComponent.cpp
+	source/scene/components/LightComponent.h
+	source/scene/components/LightComponent.cpp
 	source/io/FileSystem.h
 	source/io/FileSystem.cpp
+	source/Common.h
 	${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glad/src/glad.c
 )
 

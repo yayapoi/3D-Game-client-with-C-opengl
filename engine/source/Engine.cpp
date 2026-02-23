@@ -116,6 +116,7 @@ namespace eng
             m_graphicsAPI.ClearBuffers();
 
             CameraData cameraData;
+            std::vector<LightData> lights;
 
             int width = 0;
             int height = 0;
@@ -134,9 +135,11 @@ namespace eng
                         cameraData.projectionMatrix = cameraComponent->GetProjectionMatrix(aspect);
                     }
                 }
+
+                lights = m_currentScene->CollectLights();
             }
 
-            m_rederQueue.Draw(m_graphicsAPI, cameraData);
+            m_rederQueue.Draw(m_graphicsAPI, cameraData, lights);
 
             glfwSwapBuffers(m_window);
 
