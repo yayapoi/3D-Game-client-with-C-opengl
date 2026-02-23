@@ -24,6 +24,9 @@ namespace eng
         bool IsAlive() const;
         void MarkForDestroy();
 
+        void SetActive(bool active);
+        bool IsActive() const;
+
         void AddComponent(Component* component);
         template<typename T, typename = typename std::enable_if_t<std::is_base_of_v<Component, T>>>
         T* GetComponent()
@@ -40,6 +43,8 @@ namespace eng
 
             return nullptr;
         }
+
+        GameObject* FindChildByName(const std::string& name);
 
         const glm::vec3& GetPosition() const;
         glm::vec3 GetWorldPosition() const;
@@ -69,6 +74,7 @@ namespace eng
         glm::vec3 m_position = glm::vec3(0.0f);
         glm::quat m_rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
         glm::vec3 m_scale = glm::vec3(1.0f);
+        bool m_active = true;
 
         friend class Scene;
     };
