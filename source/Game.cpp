@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "TestObject.h"
+#include "Player.h"
 
 #include <iostream>
 
@@ -11,12 +12,9 @@ bool Game::Init()
     m_scene = new eng::Scene();
     eng::Engine::GetInstance().SetScene(m_scene);
 
-    auto camera = m_scene->CreateObject("Camera");
-    camera->AddComponent(new eng::CameraComponent());
-    camera->SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
-    camera->AddComponent(new eng::PlayerControllerComponent());
-
-    m_scene->SetMainCamera(camera);
+    auto player = m_scene->CreateObject<Player>("Player");
+    player->Init();
+    m_scene->SetMainCamera(player);
 
     m_scene->CreateObject<TestObject>("TestObject");
     
@@ -36,26 +34,6 @@ bool Game::Init()
 
     auto suzanneObject = eng::GameObject::LoadGLTF("models/suzanne/Suzanne.gltf");
     suzanneObject->SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
-
-    auto gun = eng::GameObject::LoadGLTF("models/sten_gunmachine_carbine/scene.gltf");
-    gun->SetParent(camera);
-    gun->SetPosition(glm::vec3(0.75f, -0.5f, -0.75f));
-    gun->SetScale(glm::vec3(-1.0f, 1.0f, 1.0f));
-
-    if (auto anim = gun->GetComponent<eng::AnimationComponent>())
-    {
-        if (auto bullet = gun->FindChildByName("bullet_33"))
-        {
-            bullet->SetActive(false);
-        }
-
-        if (auto fire = gun->FindChildByName("BOOM_35"))
-        {
-            fire->SetActive(false);
-        }
-
-        anim->Play("shoot", false);
-    }
 
     auto light = m_scene->CreateObject("Light");
     auto lightComp = new eng::LightComponent();
@@ -85,8 +63,6 @@ bool Game::Init()
         eng::BodyType::Dynamic, boxCollider, 5.0f, 0.5f);
     boxObj->AddComponent(new eng::PhysicsComponent(boxBody));
 
-    camera->SetPosition(glm::vec3(0.0f, 1.0f, 7.0f));
-    
     return true;
 }
 
