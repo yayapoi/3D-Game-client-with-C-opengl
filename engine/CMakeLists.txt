@@ -1,6 +1,15 @@
 cmake_minimum_required(VERSION 3.10)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 project(Engine)
+
+set(ASSETS_DIR "${CMAKE_SOURCE_DIR}/assets")
+
+configure_file(
+	${PROJECT_SOURCE_DIR}/config.h.in
+	${PROJECT_BINARY_DIR}/config.h
+)
 
 set(PROJECT_SOURCE_FILES
 	source/Engine.h
@@ -31,6 +40,8 @@ set(PROJECT_SOURCE_FILES
 	source/scene/components/CameraComponent.cpp
 	source/scene/components/PlayerControllerComponent.h
 	source/scene/components/PlayerControllerComponent.cpp
+	source/io/FileSystem.h
+	source/io/FileSystem.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glad/src/glad.c
 )
 
@@ -61,11 +72,21 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 # Add GLM library
-add_subdirectory(thirdparty/glm/glm)
-include_directories(thirdparty/glm)
+add_subdirectory(thirdparty/glm-1.0.3/glm)
+include_directories(thirdparty/glm-1.0.3)
+
+include_directories(thirdparty/stb_image)
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR})
 
 # Link all thirdparty libraries
 target_link_libraries(${PROJECT_NAME} 
     glfw
 	glm
+)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${ASSETS_DIR}
+	${CMAKE_BINARY_DIR}/assets
 )
