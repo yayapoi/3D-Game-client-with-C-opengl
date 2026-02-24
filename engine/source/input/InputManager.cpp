@@ -39,6 +39,42 @@ namespace eng
         return m_mouseKeys[button];
     }
 
+    void InputManager::SetMouseButtonWasPressed(int button, bool pressed)
+    {
+        if (button < 0 || button >= static_cast<int>(m_mouseKeyPressed.size()))
+        {
+            return;
+        }
+        m_mouseKeyPressed[button] = pressed;
+    }
+
+    bool InputManager::WasMouseButtonPressed(int button) const
+    {
+        if (button < 0 || button >= static_cast<int>(m_mouseKeyPressed.size()))
+        {
+            return false;
+        }
+        return m_mouseKeyPressed[button];
+    }
+
+    void InputManager::SetMouseButtonWasReleased(int button, bool pressed)
+    {
+        if (button < 0 || button >= static_cast<int>(m_mouseKeyReleased.size()))
+        {
+            return;
+        }
+        m_mouseKeyReleased[button] = pressed;
+    }
+
+    bool InputManager::WasMouseButtonReleased(int button) const
+    {
+        if (button < 0 || button >= static_cast<int>(m_mouseKeyReleased.size()))
+        {
+            return false;
+        }
+        return m_mouseKeyReleased[button];
+    }
+
     void InputManager::SetMousePositionOld(const glm::vec2& pos)
     {
         m_mousePositionOld = pos;
@@ -67,5 +103,18 @@ namespace eng
     bool InputManager::IsMousePositionChanged() const
     {
         return m_mousePositionChanged;
+    }
+
+    void InputManager::ClearStates()
+    {
+        SetMousePositionChanged(false);
+        for (auto k : m_mouseKeyPressed)
+        {
+            SetMouseButtonWasPressed(k, false);
+        }
+        for (auto k : m_mouseKeyReleased)
+        {
+            SetMouseButtonWasReleased(k, false);
+        }
     }
 }

@@ -30,6 +30,10 @@ namespace eng
             const glm::vec2& lowerLeftUV, const glm::vec2& upperRightUV,
             Texture* texture, const glm::vec4& color
         );
+        void DrawRect(
+            const glm::vec2& lowerLeftPos, const glm::vec2& upperRightPos,
+            const glm::vec4& color
+        );
 
     private:
         void UpdateBatches(Texture* texture);
