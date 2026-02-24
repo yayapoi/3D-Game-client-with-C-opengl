@@ -60,6 +60,9 @@ namespace eng
             return false;
         }
 
+        Scene::RegisterTypes();
+        m_application->RegisterTypes();
+
         if (!glfwInit())
         {
             return false;

@@ -1,4 +1,4 @@
-#include "scene/GameObject.h"
+﻿#include "scene/GameObject.h"
 #include "Engine.h"
 #include "graphics/VertexLayout.h"
 #include "graphics/Texture.h"
@@ -139,14 +139,56 @@ namespace eng
         m_position = pos;
     }
 
+    void GameObject::SetWorldPosition(const glm::vec3& pos)
+    {
+        if (m_parent)
+        {
+            glm::mat4 parentWorld = m_parent->GetWorldTransform();
+            glm::mat4 invParentWorld = glm::inverse(parentWorld);
+            glm::vec4 localPos = invParentWorld * glm::vec4(pos, 1.0f);
+            SetPosition(glm::vec3(localPos) / localPos.w);
+        }
+        else
+        {
+            SetPosition(pos);
+        }
+    }
+
     const glm::quat& GameObject::GetRotation() const
     {
         return m_rotation;
     }
 
+    glm::quat GameObject::GetWorldRotation()
+    {
+        if (m_parent)
+        {
+            return m_parent->GetWorldRotation() * m_rotation;
+        }
+        else
+        {
+            return m_rotation;
+        }
+    }
+
     void GameObject::SetRotation(const glm::quat& rot)
     {
         m_rotation = rot;
+    }
+
+    void GameObject::SetWorldRotation(const glm::quat& rot)
+    {
+        if (m_parent)
+        {
+            glm::quat parentWorldRot = m_parent->GetWorldRotation();
+            glm::quat invParentWorldRot = glm::inverse(parentWorldRot);
+            glm::quat newLocalRot = invParentWorldRot * rot;
+            SetRotation(newLocalRot);
+        }
+        else
+        {
+            SetRotation(rot);
+        }
     }
 
     const glm::vec3& GameObject::GetScale() const

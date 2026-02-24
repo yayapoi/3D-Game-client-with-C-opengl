@@ -86,6 +86,7 @@ include_directories(thirdparty/glfw-3.4/include)
 # 添加glad头文件路径
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glad/include
+	${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/json
 )
 
 # Add GLM library
@@ -94,7 +95,7 @@ include_directories(thirdparty/glm-1.0.3)
 
 include_directories(thirdparty/stb_image)
 
-include_directories(thirdparty/json)
+#include_directories(thirdparty/json) 不起作用？
 
 include_directories(thirdparty/cgltf)
 
