@@ -13,6 +13,7 @@ namespace eng
     public:
         void Init() override;
         void Update(float deltaTime) override;
+        bool OnGround() const;
 
     private:
         float m_sensitivity = 15.0f;
