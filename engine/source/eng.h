@@ -33,3 +33,5 @@
 #include "physics/CollisionObject.h"
 #include "audio/AudioManager.h"
 #include "audio/Audio.h"
+#include "font/Font.h"
+#include "font/FontManager.h"

@@ -76,6 +76,10 @@ set(PROJECT_SOURCE_FILES
 	source/audio/AudioManager.cpp
 	source/audio/Audio.h
 	source/audio/Audio.cpp
+	source/font/Font.h
+	source/font/Font.cpp
+	source/font/FontManager.h
+	source/font/FontManager.cpp
 	source/Common.h
 	${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glad/src/glad.c
 )
@@ -118,6 +122,11 @@ include_directories(thirdparty/stb_image)
 include_directories(thirdparty/cgltf)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR})
+
+# Add freetype
+add_subdirectory(thirdparty/freetype-2.14.1 "${CMAKE_CURRENT_BINARY_DIR}/freetype_build")
+include_directories(thirdparty/freetype-2.14.1/include)
+target_link_libraries(${PROJECT_NAME} freetype)
 
 add_library(miniaudio INTERFACE)
 target_include_directories(miniaudio INTERFACE thirdparty/miniaudio)
