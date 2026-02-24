@@ -1,4 +1,4 @@
-#include "render/Mesh.h"
+﻿#include "render/Mesh.h"
 #include "graphics/GraphicsAPI.h"
 #include "Engine.h"
 
@@ -64,6 +64,11 @@ namespace eng
     void Mesh::Bind()
     {
         glBindVertexArray(m_VAO);
+    }
+
+    void Mesh::Unbind()
+    {
+        glBindVertexArray(0);
     }
 
     void Mesh::Draw()
@@ -173,6 +178,96 @@ namespace eng
             sizeof(float) * 8
             });
         vertexLayout.stride = sizeof(float) * 11;
+
+        auto result = std::make_shared<eng::Mesh>(vertexLayout, vertices, indices);
+
+        return result;
+    }
+
+    std::shared_ptr<Mesh> Mesh::CreateSphere(float radius, int sectors, int stacks)
+    {
+        const float PI = 3.14159265358979323846f;
+
+        std::vector<float> vertices((stacks + 1) * (sectors + 1) * 8);
+        for (int i = 0; i <= stacks; ++i)
+        {
+            float stackAngle = PI / 2.0f - static_cast<float>(i) * (PI / static_cast<float>(stacks)); // From -π/2 to π/2
+            float xy = radius * cosf(stackAngle); // x-y plane radius at this stack
+            float z = radius * sinf(stackAngle);  // z coordinate
+
+            for (int j = 0; j <= sectors; ++j) {
+                float sectorAngle = static_cast<float>(j) * (2.0f * PI / static_cast<float>(sectors)); // From 0 to 2π
+
+                float x = xy * cosf(sectorAngle);
+                float y = xy * sinf(sectorAngle);
+
+                size_t vertexStart = (i * (sectors + 1) + j) * 8;
+                // Position
+                vertices[vertexStart] = x;
+                vertices[vertexStart + 1] = y;
+                vertices[vertexStart + 2] = z;
+
+                // Normal (normalized position vector)
+                float length = sqrtf(x * x + y * y + z * z);
+                vertices[vertexStart + 3] = x / length;
+                vertices[vertexStart + 4] = y / length;
+                vertices[vertexStart + 5] = z / length;
+
+                // UV coordinates
+                vertices[vertexStart + 6] = static_cast<float>(j) / static_cast<float>(sectors);
+                vertices[vertexStart + 7] = static_cast<float>(i) / static_cast<float>(stacks);
+            }
+        }
+
+        // Generate indices
+        std::vector<unsigned int> indices;
+        for (int i = 0; i < stacks; ++i)
+        {
+            int k1 = i * (sectors + 1);
+            int k2 = k1 + sectors + 1;
+
+            for (int j = 0; j < sectors; ++j, ++k1, ++k2)
+            {
+                if (i != 0)
+                {
+                    indices.push_back(k1);
+                    indices.push_back(k2);
+                    indices.push_back(k1 + 1);
+                }
+
+                if (i != (stacks - 1))
+                {
+                    indices.push_back(k1 + 1);
+                    indices.push_back(k2);
+                    indices.push_back(k2 + 1);
+                }
+            }
+        }
+
+        eng::VertexLayout vertexLayout;
+
+        // Postion
+        vertexLayout.elements.push_back({
+            VertexElement::PositionIndex,
+            3,
+            GL_FLOAT,
+            0
+            });
+        // Normal
+        vertexLayout.elements.push_back({
+            VertexElement::NormalIndex,
+            3,
+            GL_FLOAT,
+            sizeof(float) * 3
+            });
+        // UV
+        vertexLayout.elements.push_back({
+            VertexElement::UVIndex,
+            2,
+            GL_FLOAT,
+            sizeof(float) * 6
+            });
+        vertexLayout.stride = sizeof(float) * 8;
 
         auto result = std::make_shared<eng::Mesh>(vertexLayout, vertices, indices);
 
