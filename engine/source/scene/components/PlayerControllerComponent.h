@@ -15,8 +15,8 @@ namespace eng
         void Update(float deltaTime) override;
 
     private:
-        float m_sensitivity = 4.5f;
-        float m_moveSpeed = 30.0f;
+        float m_sensitivity = 15.0f;
+        float m_moveSpeed = 50.0f;
         float m_xRot = 0.0f;
         float m_yRot = 0.0f;
         std::unique_ptr<KinematicCharacterController> m_kinematicController;

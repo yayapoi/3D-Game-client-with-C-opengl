@@ -1,8 +1,24 @@
 #include "scene/Scene.h"
+#include "scene/components/AnimationComponent.h"
+#include "scene/components/CameraComponent.h"
 #include "scene/components/LightComponent.h"
+#include "scene/components/MeshComponent.h"
+#include "scene/components/PhysicsComponent.h"
+#include "scene/components/PlayerControllerComponent.h"
+#include "Engine.h"
 
 namespace eng
 {
+    void Scene::RegisterTypes()
+    {
+        AnimationComponent::Register();
+        CameraComponent::Register();
+        LightComponent::Register();
+        MeshComponent::Register();
+        PhysicsComponent::Register();
+        PlayerControllerComponent::Register();
+    }
+
     void Scene::Update(float deltaTime)
     {
         for (auto it = m_objects.begin(); it != m_objects.end();)
@@ -184,6 +200,37 @@ namespace eng
         return lights;
     }
 
+    std::shared_ptr<Scene> Scene::Load(const std::string& path)
+    {
+        const std::string contents = Engine::GetInstance().GetFileSystem().LoadAssetFileText(path);
+        if (contents.empty())
+        {
+            return nullptr;
+        }
+
+        auto json = nlohmann::json::parse(contents);
+        if (json.empty())
+        {
+            return nullptr;
+        }
+
+        auto result = std::make_shared<Scene>();
+
+        const std::string sceneName = json.value("name", "noname");
+
+        if (json.contains("objects") && json["objects"].is_array())
+        {
+            const auto& objects = json["objects"];
+
+            for (const auto& obj : objects)
+            {
+                result->LoadObject(obj, nullptr);
+            }
+        }
+
+        return result;
+    }
+
     void Scene::CollectLightsRecursive(GameObject* obj, std::vector<LightData>& out)
     {
         if (auto light = obj->GetComponent<LightComponent>())
@@ -197,6 +244,74 @@ namespace eng
         for (auto& child : obj->m_children)
         {
             CollectLightsRecursive(child.get(), out);
+        }
+    }
+
+    void Scene::LoadObject(const nlohmann::json& jsonObject, GameObject* parent)
+    {
+        const std::string name = jsonObject.value("name", "Object");
+
+        GameObject* gameObject = nullptr;
+
+        if (jsonObject.contains("type"))
+        {
+            const std::string type = jsonObject.value("type", "");
+        }
+        else
+        {
+            gameObject = CreateObject(name, parent);
+        }
+
+        if (!gameObject)
+        {
+            return;
+        }
+
+        // Read transform
+        if (jsonObject.contains("position"))
+        {
+            auto posObj = jsonObject["position"];
+            glm::vec3 pos;
+            pos.x = posObj.value("x", 0.0f);
+            pos.y = posObj.value("y", 0.0f);
+            pos.z = posObj.value("z", 0.0f);
+            gameObject->SetPosition(pos);
+        }
+
+        if (jsonObject.contains("rotation"))
+        {
+            auto rotObj = jsonObject["rotation"];
+            glm::quat rot;
+            rot.x = rotObj.value("x", 0.0f);
+            rot.y = rotObj.value("y", 0.0f);
+            rot.z = rotObj.value("z", 0.0f);
+            rot.w = rotObj.value("w", 1.0f);
+            gameObject->SetRotation(rot);
+        }
+
+        if (jsonObject.contains("scale"))
+        {
+            auto scaleObj = jsonObject["scale"];
+            glm::vec3 scale;
+            scale.x = scaleObj.value("x", 1.0f);
+            scale.y = scaleObj.value("y", 1.0f);
+            scale.z = scaleObj.value("z", 1.0f);
+            gameObject->SetScale(scale);
+        }
+
+        if (jsonObject.contains("components") && jsonObject["components"].is_array())
+        {
+            const auto& components = jsonObject["components"];
+            for (const auto& comp : components)
+            {
+                const std::string type = comp.value("type", "");
+                Component* component = ComponentFactory::GetInstance().CreateComponent(type);
+                if (component)
+                {
+                    component->LoadProperties(comp);
+                    gameObject->AddComponent(component);
+                }
+            }
         }
     }
 }

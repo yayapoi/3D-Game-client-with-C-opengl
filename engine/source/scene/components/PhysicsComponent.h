@@ -14,6 +14,8 @@ namespace eng
         void Init() override;
         void Update(float deltaTime) override;
 
+        void SetRigidBody(const std::shared_ptr<RigidBody>& body);
+
     private:
         std::shared_ptr<RigidBody> m_rigidBody;
     };
