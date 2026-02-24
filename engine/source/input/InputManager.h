@@ -20,6 +20,12 @@ namespace eng
         void SetMouseButtonPressed(int button, bool pressed);
         bool IsMouseButtonPressed(int button);
 
+        void SetMouseButtonWasPressed(int button, bool pressed);
+        bool WasMouseButtonPressed(int button) const;
+
+        void SetMouseButtonWasReleased(int button, bool pressed);
+        bool WasMouseButtonReleased(int button) const;
+
         void SetMousePositionOld(const glm::vec2& pos);
         const glm::vec2& GetMousePositionOld() const;
 
@@ -29,9 +35,13 @@ namespace eng
         void SetMousePositionChanged(bool changed);
         bool IsMousePositionChanged() const;
 
+        void ClearStates();
+
     private:
         std::array<bool, 256> m_keys = { false };
         std::array<bool, 16> m_mouseKeys = { false };
+        std::array<bool, 16> m_mouseKeyPressed = { false };
+        std::array<bool, 16> m_mouseKeyReleased = { false };
         glm::vec2 m_mousePositionOld = glm::vec2(0.0f);
         glm::vec2 m_mousePositionCurrent = glm::vec2(0.0f);
         bool m_mousePositionChanged = false;

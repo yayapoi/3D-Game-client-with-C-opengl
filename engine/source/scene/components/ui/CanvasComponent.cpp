@@ -111,6 +111,24 @@ namespace eng
         UpdateBatches(texture);
     }
 
+    void CanvasComponent::DrawRect(
+        const glm::vec2& p1, const glm::vec2& p2,
+        const glm::vec4& color
+    )
+    {
+        uint32_t base = static_cast<uint32_t>(m_vertices.size() / 8);
+
+        m_vertices.insert(m_vertices.end(), {
+            p2.x, p2.y, color.r, color.g, color.b, color.a, 1.0f, 1.0f,
+            p1.x, p2.y, color.r, color.g, color.b, color.a, 0.0f, 1.0f,
+            p1.x, p1.y, color.r, color.g, color.b, color.a, 0.0f, 0.0f,
+            p2.x, p1.y, color.r, color.g, color.b, color.a, 1.0f, 0.0f,
+            });
+        m_indices.insert(m_indices.end(), { base, base + 1, base + 2, base, base + 2, base + 3 });
+
+        UpdateBatches(nullptr);
+    }
+
     void CanvasComponent::UpdateBatches(Texture* texture)
     {
         if (m_batches.empty() || m_batches.back().texture != texture)
