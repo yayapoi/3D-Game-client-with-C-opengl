@@ -7,6 +7,7 @@
 #include "io/FileSystem.h"
 #include "physics/PhysicsManager.h"
 #include"audio/AudioManager.h"
+#include "font/FontManager.h"
 
 #include <memory>
 #include <chrono>
@@ -41,6 +42,7 @@ namespace eng
         TextureManager& GetTextureManager();
         PhysicsManager& GetPhysicsManager();
         AudioManager& GetAudioManager();
+        FontManager& GetFontManager();
 
         void SetScene(Scene* scene);
         Scene* GetScene();
@@ -56,6 +58,7 @@ namespace eng
         TextureManager m_textureManager;
         PhysicsManager m_physicsManager;
         AudioManager m_audioManager;
+        FontManager m_fontManager;
         std::unique_ptr<Scene> m_currentScene;
     };
 }
