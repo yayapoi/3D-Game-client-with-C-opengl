@@ -99,6 +99,7 @@ namespace eng
         m_graphicsAPI.Init();
         m_physicsManager.Init();
         m_audioManager.Init();
+        m_rederQueue.Init();
         return m_application->Init();
     }
 

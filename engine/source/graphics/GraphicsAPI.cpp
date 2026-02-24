@@ -146,6 +146,11 @@ namespace eng
         return m_defaultShaderProgram;
     }
 
+    const std::shared_ptr<ShaderProgram>& GraphicsAPI::GetDefault2DShaderProgram()
+    {
+        return m_default2DShaderProgram;
+    }
+
     GLuint GraphicsAPI::CreateVertexBuffer(const std::vector<float>& vertices)
     {
         GLuint VBO = 0;
