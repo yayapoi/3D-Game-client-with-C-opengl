@@ -148,6 +148,53 @@ namespace eng
 
     const std::shared_ptr<ShaderProgram>& GraphicsAPI::GetDefault2DShaderProgram()
     {
+        if (!m_default2DShaderProgram)
+        {
+            std::string vertexShaderSource = R"(
+            #version 330 core
+            layout (location = 0) in vec2 position;
+        
+            out vec2 vUV;
+        
+            uniform mat4 uModel;
+            uniform mat4 uView;
+            uniform mat4 uProjection;
+
+            uniform vec2 uPivot;
+            uniform vec2 uSize;    
+
+            uniform vec2 uUVMin;
+            uniform vec2 uUVMax;  
+        
+            void main()
+            {
+                vec2 local = (position - uPivot) * uSize;
+                vUV = mix(uUVMin, uUVMax, position);
+                
+                gl_Position = uProjection * uView * uModel * vec4(local, 0.0, 1.0);
+            }
+            )";
+
+            std::string fragmentShaderSource = R"(
+            #version 330 core
+
+            in vec2 vUV;
+
+            uniform vec4 uColor;
+
+            uniform sampler2D uTex;
+
+            out vec4 FragColor;
+
+            void main()
+            {
+                vec4 src = texture(uTex, vUV) * uColor;
+                FragColor = src;
+            }
+            )";
+
+            m_default2DShaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+        }
         return m_default2DShaderProgram;
     }
 
@@ -179,6 +226,53 @@ namespace eng
     void GraphicsAPI::ClearBuffers()
     {
         glClear(GL_COLOR_BUFFER_BIT  | GL_DEPTH_BUFFER_BIT);
+    }
+
+    void GraphicsAPI::SetDepthTestEnabled(bool enabled)
+    {
+        if (enabled)
+        {
+            glEnable(GL_DEPTH_TEST);
+        }
+        else
+        {
+            glDisable(GL_DEPTH_TEST);
+        }
+    }
+
+    void GraphicsAPI::SetBlendMode(BlendMode mode)
+    {
+        switch (mode)
+        {
+        case BlendMode::Disabled:
+        {
+            glDisable(GL_BLEND);
+        }
+        break;
+        case BlendMode::Alpha:
+        {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        }
+        break;
+        case BlendMode::Additive:
+        {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ONE, GL_ONE);
+        }
+        break;
+        case BlendMode::Multiply:
+        {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_DST_COLOR, GL_ZERO);
+        }
+        break;
+        default:
+        {
+            glDisable(GL_BLEND);
+        }
+            break;
+        }
     }
 
     void GraphicsAPI::BindShaderProgram(ShaderProgram* shaderProgram)
