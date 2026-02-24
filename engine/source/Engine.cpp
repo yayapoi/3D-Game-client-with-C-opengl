@@ -47,6 +47,11 @@ namespace eng
         inputManager.SetMousePositionChanged(true);
     }
 
+    void windowSizeCallback(GLFWwindow* window, int width, int height)
+    {
+        eng::Engine::GetInstance().GetGraphicsAPI().SetViewport(0, 0, width, height);
+    }
+
     Engine& Engine::GetInstance()
     {
         static Engine instance;
@@ -97,6 +102,7 @@ namespace eng
         }
 
         m_graphicsAPI.Init();
+        m_graphicsAPI.SetViewport(0, 0, width, height);
         m_physicsManager.Init();
         m_audioManager.Init();
         m_rederQueue.Init();

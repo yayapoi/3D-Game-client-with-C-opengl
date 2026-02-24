@@ -11,6 +11,7 @@ namespace eng
     class Material;
     class GraphicsAPI;
     class Texture;
+    class ShaderProgram;
 
     struct RenderCommand
     {
@@ -30,17 +31,28 @@ namespace eng
         glm::vec2 pivot;
     };
 
+    struct RenderCommandUI
+    {
+        Mesh* mesh;
+        ShaderProgram* shaderProgram;
+        size_t screenWidth;
+        size_t screenHeight;
+        std::vector<UIBatch> batches;
+    };
+
     class RenderQueue
     {
     public:
         void Init();
         void Submit(const RenderCommand& command);
         void Submit(const RenderCommand2D& command);
+        void Submit(const RenderCommandUI& command);
         void Draw(GraphicsAPI& graphicsAPI, const CameraData& cameraData, const std::vector<LightData>& lights);
 
     private:
         std::vector<RenderCommand> m_commands;
         std::vector<RenderCommand2D> m_commands2D;
+        std::vector<RenderCommandUI> m_commandsUI;
         std::shared_ptr<Mesh> m_mesh2D;
     };
 }
