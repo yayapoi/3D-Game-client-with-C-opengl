@@ -41,6 +41,18 @@ bool Game::Init()
     camera->AddComponent(cameraComponent);
     m_scene->SetMainCamera(camera);
 
+    auto canvas = m_scene->CreateObject("Canvas");
+    auto canvasComponent = new eng::CanvasComponent();
+    canvas->AddComponent(canvasComponent);
+
+    auto text = m_scene->CreateObject("Text", canvas);
+    text->SetPosition2D(glm::vec2(300.0f, 300.0f));
+    auto textComponent = new eng::TextComponent();
+    text->AddComponent(textComponent);
+    textComponent->SetText("Some Text");
+    textComponent->SetFont("fonts/arial.ttf", 24);
+    textComponent->SetColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
     return true;
 }
 
