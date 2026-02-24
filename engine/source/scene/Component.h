@@ -66,16 +66,7 @@ namespace eng
             m_creators.emplace(name, std::make_unique<ComponentCreator<T>>());
         }
 
-        Component* CreateComponent(const std::string& name)
-        {
-            auto it = m_creators.find(name);
-            if (it != m_creators.end())
-            {
-                return it->second->CreateComponent();
-            }
-
-            return nullptr;
-        }
+        Component* CreateComponent(const std::string& name);
 
     private:
         std::unordered_map<std::string, std::unique_ptr<ComponentCreatorBase>> m_creators;

@@ -14,6 +14,7 @@ namespace eng
     public:
         MeshComponent() = default;
         MeshComponent(const std::shared_ptr<Material>& material, const std::shared_ptr<Mesh>& mesh);
+        void LoadProperties(const nlohmann::json& json) override;
         void Update(float deltaTime) override;
 
         void SetMaterial(const std::shared_ptr<Material>& material);

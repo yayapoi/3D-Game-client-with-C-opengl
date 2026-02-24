@@ -22,4 +22,15 @@ namespace eng
         static ComponentFactory instance;
         return instance;
     }
+
+    Component* ComponentFactory::CreateComponent(const std::string& name)
+    {
+        auto it = m_creators.find(name);
+        if (it != m_creators.end())
+        {
+            return it->second->CreateComponent();
+        }
+
+        return nullptr;
+    }
 }
