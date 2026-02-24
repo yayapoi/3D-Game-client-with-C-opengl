@@ -1,5 +1,6 @@
 #pragma once
 #include "physics/Collider.h"
+#include "physics/CollisionObject.h"
 
 #include <glm/gtc/quaternion.hpp>
 
@@ -16,7 +17,7 @@ namespace eng
 		Kinematic
 	};
 
-	class RigidBody
+	class RigidBody : public CollisionObject
 	{
 	public:
 		RigidBody(BodyType type, const std::shared_ptr<Collider>& collider, float mass, float friction);
