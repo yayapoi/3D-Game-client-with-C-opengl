@@ -50,9 +50,9 @@ namespace eng
             const auto& desc = m_font->GetGlyphDescription(c);
 
             float x1 = static_cast<float>(xOrigin);
-            float y1 = static_cast<float>(yOrigin);
-            float x2 = static_cast<float>(xOrigin + desc.width);
-            float y2 = static_cast<float>(yOrigin + desc.height);
+            float y1 = static_cast<float>(yOrigin - desc.height + desc.yOffset);
+            float x2 = x1 + static_cast<float>(desc.width);
+            float y2 = y1 + static_cast<float>(desc.height);
 
             float u1 = static_cast<float>(desc.x0) / static_cast<float>(width);
             float v1 = static_cast<float>(desc.y0) / static_cast<float>(height);

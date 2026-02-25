@@ -1,8 +1,11 @@
 #pragma once
+
+#include <glad/glad.h>
+
 #include <memory>
 #include <string>
 #include <vector>
-#include <glad/glad.h>
+#include <unordered_map>
 
 namespace eng
 {
@@ -24,6 +27,28 @@ namespace eng
         int y = 0;
         int width = 0;
         int height = 0;
+    };
+
+    struct ShaderKey
+    {
+        std::string vertexSource;
+        std::string fragmentSource;
+
+        bool operator==(const ShaderKey& other) const
+        {
+            return vertexSource == other.vertexSource &&
+                fragmentSource == other.fragmentSource;
+        }
+    };
+
+    struct ShaderKeyHash
+    {
+        std::size_t operator()(const ShaderKey& key) const
+        {
+            std::size_t h1 = std::hash<std::string>{}(key.vertexSource);
+            std::size_t h2 = std::hash<std::string>{}(key.fragmentSource);
+            return h1 ^ (h2 << 1);
+        }
     };
 
     class GraphicsAPI
@@ -56,5 +81,6 @@ namespace eng
         std::shared_ptr<ShaderProgram> m_defaultShaderProgram;
         std::shared_ptr<ShaderProgram> m_default2DShaderProgram;
         std::shared_ptr<ShaderProgram> m_defaultUIShaderProgram;
+        std::unordered_map<ShaderKey, std::shared_ptr<ShaderProgram>, ShaderKeyHash> m_shaderCache;
     };
 }

@@ -22,9 +22,14 @@ namespace eng
         m_activeCanvas = canvas;
     }
 
+    CanvasComponent* UIInputSystem::GetCanvas()
+    {
+        return m_activeCanvas;
+    }
+
     void UIInputSystem::Update(float deltaTime)
     {
-        if (!m_active || !m_activeCanvas)
+        if (!m_active || !m_activeCanvas || !m_activeCanvas->IsActive())
         {
             return;
         }
