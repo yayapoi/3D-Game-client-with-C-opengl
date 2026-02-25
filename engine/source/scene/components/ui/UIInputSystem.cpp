@@ -1,5 +1,6 @@
 #include "scene/components/ui/UIInputSystem.h"
 #include "scene/components/ui/CanvasComponent.h"
+#include "scene/components/ui/UIElementComponent.h"
 #include "Engine.h"
 
 #include <GLFW/glfw3.h>
@@ -35,6 +36,73 @@ namespace eng
 
         auto mousePos = input.GetMousePositionCurrent();
         mousePos.y = Engine::GetInstance().GetGraphicsAPI().GetViewport().height - mousePos.y;
+
+        UIElementComponent* hit = nullptr;
+        auto uiElements = CollectUI(m_activeCanvas);
+        for (auto element : uiElements)
+        {
+            if (element->HitTest(mousePos))
+            {
+                hit = element;
+                break;
+            }
+        }
+
+        if (hit != m_hovered)
+        {
+            if (m_hovered)
+            {
+                m_hovered->OnPointerExit();
+            }
+
+            m_hovered = hit;
+
+            if (m_hovered)
+            {
+                m_hovered->OnPointerEnter();
+            }
+            m_pressed = nullptr;
+        }
+
+        if (!m_pressed)
+        {
+            if (mousePressed && m_hovered)
+            {
+                m_pressed = m_hovered;
+                m_pressed->OnPointerDown();
+            }
+        }
+
+        if (mouseReleased)
+        {
+            if (m_pressed)
+            {
+                m_pressed->OnPointerUp();
+
+                if (m_pressed == m_hovered)
+                {
+                    m_pressed->OnClick();
+                }
+            }
+
+            m_pressed = nullptr;
+        }
+    }
+
+    std::vector<UIElementComponent*> UIInputSystem::CollectUI(CanvasComponent* canvas)
+    {
+        std::vector<UIElementComponent*> result;
+        GameObject* canvasObject = canvas->GetOwner();
+        const auto& children = canvasObject->GetChildren();
+
+        for (const auto& child : children)
+        {
+            if (auto component = child->GetComponent<UIElementComponent>())
+            {
+                canvas->CollectUI(component, result);
+            }
+        }
+        return result;
     }
 
 }

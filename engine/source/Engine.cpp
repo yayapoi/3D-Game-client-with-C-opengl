@@ -91,7 +91,7 @@ namespace eng
         glfwSetKeyCallback(m_window, keyCallback);
         glfwSetMouseButtonCallback(m_window, mouseButtonCallback);
         glfwSetCursorPosCallback(m_window, cursorPositionCallback);
-        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetWindowSizeCallback(m_window, windowSizeCallback);
 
         glfwMakeContextCurrent(m_window);
 
@@ -186,6 +186,11 @@ namespace eng
             glfwTerminate();
             m_window = nullptr;
         }
+    }
+
+    void Engine::SetCursorEnabled(bool enabled)
+    {
+        glfwSetInputMode(m_window, GLFW_CURSOR, enabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
     }
 
     void Engine::SetApplication(Application* app)

@@ -4,6 +4,51 @@
 
 namespace eng
 {
+    void ButtonComponent::LoadProperties(const nlohmann::json& json)
+    {
+        if (json.contains("rect"))
+        {
+            auto& rectObj = json["rect"];
+            SetRect(glm::vec2(
+                rectObj.value("x", 1.0f),
+                rectObj.value("y", 1.0f)
+            ));
+        }
+
+        if (json.contains("color"))
+        {
+            auto& colorObj = json["color"];
+            SetColor(glm::vec4(
+                colorObj.value("r", 1.0f),
+                colorObj.value("g", 1.0f),
+                colorObj.value("b", 1.0f),
+                colorObj.value("a", 1.0f)
+            ));
+        }
+
+        if (json.contains("hovered"))
+        {
+            auto& colorObj = json["hovered"];
+            SetHoveredColor(glm::vec4(
+                colorObj.value("r", 1.0f),
+                colorObj.value("g", 1.0f),
+                colorObj.value("b", 1.0f),
+                colorObj.value("a", 1.0f)
+            ));
+        }
+
+        if (json.contains("pressed"))
+        {
+            auto& colorObj = json["pressed"];
+            SetPressedColor(glm::vec4(
+                colorObj.value("r", 1.0f),
+                colorObj.value("g", 1.0f),
+                colorObj.value("b", 1.0f),
+                colorObj.value("a", 1.0f)
+            ));
+        }
+    }
+
     void ButtonComponent::Render(CanvasComponent* canvas)
     {
         if (!canvas)
@@ -79,5 +124,25 @@ namespace eng
     const glm::vec4& ButtonComponent::GetColor() const
     {
         return m_color;
+    }
+
+    void ButtonComponent::SetHoveredColor(const glm::vec4& color)
+    {
+        m_hoveredColor = color;
+    }
+
+    const glm::vec4& ButtonComponent::GetHoveredColor() const
+    {
+        return m_hoveredColor;
+    }
+
+    void ButtonComponent::SetPressedColor(const glm::vec4& color)
+    {
+        m_pressedColor = color;
+    }
+
+    const glm::vec4& ButtonComponent::GetPressedColor() const
+    {
+        return m_pressedColor;
     }
 }
