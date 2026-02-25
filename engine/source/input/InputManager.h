@@ -38,7 +38,7 @@ namespace eng
         void ClearStates();
 
     private:
-        std::array<bool, 256> m_keys = { false };
+        std::array<bool, 512> m_keys = { false };
         std::array<bool, 16> m_mouseKeys = { false };
         std::array<bool, 16> m_mouseKeyPressed = { false };
         std::array<bool, 16> m_mouseKeyReleased = { false };

@@ -7,8 +7,19 @@
 
 namespace eng
 {
+    void CanvasComponent::LoadProperties(const nlohmann::json& json)
+    {
+        bool active = json.value("active", true);
+        SetActive(active);
+    }
+
     void CanvasComponent::Update(float deltaTime)
     {
+        if (!m_active)
+        {
+            return;
+        }
+
         BeginRendering();
         const auto& children = m_owner->GetChildren();
         for (const auto& child : children)
@@ -141,6 +152,16 @@ namespace eng
         m_indices.insert(m_indices.end(), { base, base + 1, base + 2, base, base + 2, base + 3 });
 
         UpdateBatches(nullptr);
+    }
+
+    void CanvasComponent::SetActive(bool active)
+    {
+        m_active = active;
+    }
+
+    bool CanvasComponent::IsActive() const
+    {
+        return m_active;
     }
 
     void CanvasComponent::UpdateBatches(Texture* texture)

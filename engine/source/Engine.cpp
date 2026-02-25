@@ -175,6 +175,8 @@ namespace eng
 
             m_inputManager.ClearStates();
         }
+
+        m_application.reset(nullptr);
     }
 
     void Engine::Destroy()
@@ -248,13 +250,13 @@ namespace eng
         return m_uiInputSystem;
     }
 
-    void Engine::SetScene(Scene* scene)
+    void Engine::SetScene(const std::shared_ptr<Scene>& scene)
     {
-        m_currentScene.reset(scene);
+        m_currentScene = scene;
     }
 
-    Scene* Engine::GetScene()
+    const std::shared_ptr<Scene>& Engine::GetScene()
     {
-        return m_currentScene.get();
+        return m_currentScene;
     }
 }
