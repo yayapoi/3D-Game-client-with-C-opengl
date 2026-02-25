@@ -92,6 +92,20 @@ namespace eng
         Engine::GetInstance().GetRenderQueue().Submit(command);
     }
 
+    void CanvasComponent::CollectUI(UIElementComponent* element, std::vector<UIElementComponent*>& out)
+    {
+        out.push_back(element);
+
+        const auto& children = element->GetOwner()->GetChildren();
+        for (const auto& child : children)
+        {
+            if (auto component = child->GetComponent<UIElementComponent>())
+            {
+                CollectUI(component, out);
+            }
+        }
+    }
+
     void CanvasComponent::DrawRect(
         const glm::vec2& p1, const glm::vec2& p2,
         const glm::vec2& uv1, const glm::vec2& uv2,

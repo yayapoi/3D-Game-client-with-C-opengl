@@ -33,6 +33,7 @@ namespace eng
         bool Init(int width, int height);
         void Run();
         void Destroy();
+        void SetCursorEnabled(bool enabled);
 
         void SetApplication(Application* app);
         Application* GetApplication();

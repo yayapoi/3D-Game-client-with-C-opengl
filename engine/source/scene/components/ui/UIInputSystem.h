@@ -1,8 +1,11 @@
 #pragma once
 
+#include <vector>
+
 namespace eng
 {
     class CanvasComponent;
+    class UIElementComponent;
 
     class UIInputSystem
     {
@@ -12,8 +15,12 @@ namespace eng
         void SetCanvas(CanvasComponent* canvas);
         void Update(float deltaTime);
 
+        std::vector<UIElementComponent*> CollectUI(CanvasComponent* canvas);
+
     private:
         bool m_active = false;
         CanvasComponent* m_activeCanvas = nullptr;
+        UIElementComponent* m_hovered = nullptr;
+        UIElementComponent* m_pressed = nullptr;
     };
 }

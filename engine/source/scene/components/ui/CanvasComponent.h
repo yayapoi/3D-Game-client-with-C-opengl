@@ -24,6 +24,7 @@ namespace eng
         void Render(UIElementComponent* element);
         void BeginRendering();
         void Flush();
+        void CollectUI(UIElementComponent* element, std::vector<UIElementComponent*>& out);
 
         void DrawRect(
             const glm::vec2& lowerLeftPos, const glm::vec2& upperRightPos,
