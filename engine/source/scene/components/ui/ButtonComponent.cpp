@@ -1,20 +1,12 @@
 #include "scene/components/ui/ButtonComponent.h"
 #include "scene/components/ui/CanvasComponent.h"
+#include "scene/components/ui/RectTransformComponent.h"
 #include "scene/GameObject.h"
 
 namespace eng
 {
     void ButtonComponent::LoadProperties(const nlohmann::json& json)
     {
-        if (json.contains("rect"))
-        {
-            auto& rectObj = json["rect"];
-            SetRect(glm::vec2(
-                rectObj.value("x", 1.0f),
-                rectObj.value("y", 1.0f)
-            ));
-        }
-
         if (json.contains("color"))
         {
             auto& colorObj = json["color"];
@@ -56,26 +48,35 @@ namespace eng
             return;
         }
 
-        auto pos = m_owner->GetWorldPosition2D();
-        pos.x -= m_rect.x * m_pivot.x;
-        pos.y -= m_rect.y * m_pivot.y;
+        auto rt = GetOwner()->GetComponent<RectTransformComponent>();
+        if (!rt)
+        {
+            return;
+        }
+
+        auto ownerPos = rt->GetScreenPosition();
+        ownerPos -= rt->GetSize() * rt->GetPivot();
 
         canvas->DrawRect(
-            pos,
-            pos + m_rect,
+            ownerPos,
+            ownerPos + rt->GetSize(),
             *m_currentColor
         );
     }
 
-    bool ButtonComponent::HitTest(const glm::vec2& pos) const
+    bool ButtonComponent::HitTest(const glm::vec2& pos)
     {
-        auto ownerPos = m_owner->GetWorldPosition2D();
-        float x1 = ownerPos.x - m_rect.x * m_pivot.x;
-        float y1 = ownerPos.y - m_rect.y * m_pivot.y;
-        float x2 = x1 + m_rect.x;
-        float y2 = y1 + m_rect.y;
+        auto rt = GetOwner()->GetComponent<RectTransformComponent>();
+        if (!rt)
+        {
+            return false;
+        }
 
-        return (x1 <= pos.x && x2 >= pos.x && y1 <= pos.y && y2 >= pos.y);
+        auto ownerPos = rt->GetScreenPosition();
+        auto p1 = ownerPos - rt->GetSize() * rt->GetPivot();
+        auto p2 = p1 + rt->GetSize();
+
+        return (p1.x <= pos.x && p2.x >= pos.x && p1.y <= pos.y && p2.y >= pos.y);
     }
 
     void ButtonComponent::OnPointerEnter()
@@ -104,16 +105,6 @@ namespace eng
         {
             onClick();
         }
-    }
-
-    void ButtonComponent::SetRect(const glm::vec2& rect)
-    {
-        m_rect = rect;
-    }
-
-    const glm::vec2& ButtonComponent::GetRect() const
-    {
-        return m_rect;
     }
 
     void ButtonComponent::SetColor(const glm::vec4& color)

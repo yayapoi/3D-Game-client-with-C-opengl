@@ -66,6 +66,9 @@ bool Game::Init()
         }
     }
 
+    eng::Engine::GetInstance().GetGraphicsAPI().SetClearColor(
+        117.0f / 256.0f, 187.0f / 256.0f, 253.0f / 256.0f, 1.0f
+    );
     return true;
 }
 
