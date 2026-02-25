@@ -28,7 +28,7 @@ namespace eng
         void SetFont(const std::shared_ptr<Font>& font);
         void SetFont(const std::string& path, int size);
 
-        glm::vec2 GetPivotPos() const;
+        glm::vec2 GetPivotPos();
 
     private:
         std::string m_text;
