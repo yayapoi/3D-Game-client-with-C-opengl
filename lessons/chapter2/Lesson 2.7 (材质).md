@@ -1,6 +1,6 @@
 既然我们已经拥有了一个统一且可复用的着色器程序，那么是时候引入一个重要概念了 —— **材质**。
 
-这一概念在现代渲染系统中得到了广泛应用，不仅在游戏开发中，而且在涉及图形的其他领域——如CAD系统、模拟或任何渲染2D或3D场景的软件 —— 也得到了广泛应用。
+这一概念在现代渲染系统中得到了广泛应用，不仅在游戏开发中，而且在涉及图形的其他领域 —— 如CAD系统、模拟或任何渲染2D或3D场景的软件 —— 也得到了广泛应用。
 
 顾名思义，*材质* 代表物体的表面特征 —— 就像在现实世界中一样。想想由木头、金属、塑料或玻璃制成的物体。这些物体各自具有独特的视觉特性：有些有光泽，有些粗糙，有些高度透明，等等。
 
@@ -59,7 +59,7 @@ void SetShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram)
 
 #### 2. `SetParam()`
 
-这设置了一个浮点数统一值：
+这设置了一个浮点数 Uniform 值：
 
 ```cpp
 void SetParam(const std::string& name, float value) 
@@ -70,7 +70,7 @@ void SetParam(const std::string& name, float value)
 
 #### 3. `Bind()`
 
-此方法绑定着色器并设置所有统一参数：
+此方法绑定着色器并设置所有 Uniform 参数：
 
 ```cpp
 void Bind() 
